@@ -1,0 +1,38 @@
+{% extends 'Layout.html' %}
+{% load static %}
+{% block body %}
+    <!-- ======= About Us Section ======= -->
+    <section id="about" class="about">
+      <div class="container header-margin" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2>About Us</h2>
+          <p>Nestled along the bustling Ngong Road, Wellcare Hospital at the University of Nairobi Kenya Science Campus is a beacon of health and well-being, offering a spectrum of services to the vibrant community it serves. The strategic location provides convenient access for patients from Nairobi and its environs, ensuring that quality healthcare is within reach.</p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6" data-aos="fade-right">
+            <img src="{% static 'assets/img/a.jpg' %}" class="img-fluid" alt="">
+          </div>
+          <div class="col-lg-6 pt-4 pt-lg-0 content" data-aos="fade-left">
+            <h3> <strong>Excellence in Healthcare:</strong> Discovering Wellcare Hospital's Distinctive Features</h3>
+            <p class="fst-italic">
+              Wellcare Hospital, situated at the University of Nairobi Kenya Science Campus, is a beacon of health in Nairobi. Known for its commitment to quality care and academic collaboration, the hospital blends expertise and compassion, offering innovative medical solutions and cutting-edge research to prioritize the well-being of the community.
+
+            </p>
+            <ul>
+              <li><i class="list bi-border-style"></i> Comprehensive Healthcare Services.</li>
+              <li><i class="list bi-border-style"></i> Expert Medical Team.</li>
+              <li><i class="list bi-border-style"></i> Patient-Centered Care</li>
+            </ul>
+            <p>
+              Wellcare Hospital is at the forefront of healthcare innovation, consistently adopting new technologies and medical advancements. The hospital embraces a culture of continuous improvement, ensuring that patients benefit from the latest breakthroughs in medical science.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End About Us Section -->
+
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'Layout.html' %}
+{% load static %}
+{% block body %}
+     <!-- ======= Appointment Section ======= -->
+   <section class="container header-margin">
+       <link rel="stylesheet" href="{% static 'css/custom/styles.css' %}">
+   <div class="row d-flex">
+       <div class="col-5 section-bg p-3">
+           <h2 class="h2 text-uppercase p-3 text-center">Previous Reports</h2>
+           {% for medical_report in medical_reports %}
+               <div class="pb-2">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-row align-items-center justify-content-between">
+                      <p class="bg-secondary p-1 px-3 rounded text-white">21st Nov 2023</p>
+                      <h6 class="bg-info rounded-5 py-1 px-3 pointer-event">View</h6>
+                  </div>
+                    <p>{{ medical_report.report }}</p>
+                </div>
+              </div>
+            </div>
+
+           {% endfor %}
+       </div>
+       <div class="col-7">
+            <section id="appointment" class="appointment section-bg">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+             <link rel="stylesheet" href="{% static 'css/custom/styles.css' %}">
+          <h2>MEDICAL REPORT</h2>
+          <p>Here is your medical report:</p>
+        </div>
+          <form action="{% url 'medical-report' %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ report.as_p }}
+              <input type="submit" value="Submit Report">
+          </form>
+      </div>
+    </section><!-- End Appointment Section -->
+       </div>
+   </div>
+   </section>
+{% endblock %}
+
+

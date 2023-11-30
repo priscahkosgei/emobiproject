@@ -1,0 +1,49 @@
+.header-margin{
+    margin-top: 100px;
+}
+
+.bg-gray-100{
+    color: rgb(243 244 246);
+}
+    /* Add your custom styles here */
+.formd {
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+    }
+
+    .formd label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .formd input[type="text"],
+    .formd select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+
+    .formd input[type="submit"] {
+        background-color: #2fb8be;
+        color: white;
+        border: none;
+        padding: 15px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .formd input[type="submit"]:hover {
+        background-color: #ea2e2e;
+    }
+
+
