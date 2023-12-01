@@ -1,13 +1,14 @@
 import base64
 import json
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from requests.auth import HTTPBasicAuth
+from django.http import Http404
 
-from healthApp.models import Member, Product,ImageModel, MedicalReportModel, DoctorsModel, PatientsModel
-from healthApp.forms import ProductForm,ImageUploadForm, MedicalReportForm, DoctorsModelForm, DoctorForm, PatientsModelForm, AppointmentForm
+from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel
+from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorsModelForm, DoctorForm, PatientsModelForm, AppointmentForm
 from django.http import HttpResponse
-from healthApp.credentials import LipanaMpesaPpassword,MpesaAccessToken,MpesaC2bCredential
+from healthApp.credentials import LipanaMpesaPpassword, MpesaAccessToken, MpesaC2bCredential
 
 import requests
 
@@ -19,10 +20,12 @@ def doctorsform(request):
         form = DoctorForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('doctor_list')  # Redirect to a view displaying the list of doctors
+            # Redirect to a view displaying the list of doctors
+            return redirect('doctor_list')
     else:
         form = DoctorForm()
         return render(request, 'doctorsform.html', {'form': form})
+
 
 def register(request):
     if request.method == 'POST':
@@ -43,54 +46,74 @@ def medical_report(request):
     else:
         report = MedicalReportForm()
         reports = MedicalReportModel.objects.all()
-        return render(request,'MedicalReport.html', {'report': report, "medical_reports": reports})
+        return render(request, 'MedicalReport.html', {'report': report, "medical_reports": reports})
 
 
 def departments(request):
-    return render(request,'departments.html')
+    return render(request, 'departments.html')
+
+
 def login(request):
     return render(request, 'login.html')
+
 
 def about(request):
     return render(request, 'about.html')
 
+
 def services(request):
     return render(request, 'services.html')
 
-#def doctors(request):
+# def doctors(request):
 #    return render(request, 'doctors.html')
+
+
 def doctors(request):
     if request.method == 'POST':
-        form = DoctorsModelForm(request.POST)
+        form = DoctorsModelForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('doctors')
         else:
-            patients_form = PatientsModelForm(request.POST)
-            if patients_form.is_valid():
-                patients_form.save()
-                return redirect('doctors')
-            else:
-                return redirect('doctors')
+            errors = form.errors
+            return render(request, 'doctors.html', {'form': form, 'errors': errors})
+            # patients_form = PatientsModelForm(request.POST)
+            # if patients_form.is_valid():
+            #     patients_form.save()
+            #     return redirect('doctors')
+            # else:
+            #     errors = patients_form.errors
+            #     return render(request, 'doctors.html', {'form': patients_form, 'errors': errors})
     else:
         doctor_form = DoctorsModelForm()
-        print("Hello there")
         patients_form = PatientsModelForm()
         patients_list = PatientsModel.objects.all()
         doctors_list = DoctorsModel.objects.all()
-        return render(request,'doctors.html', {'doctors_form': doctor_form, 'doctors': doctors_list,'patient_form': patients_form, 'patients':patients_list})
+        return render(request, 'doctors.html', {'doctors_form': doctor_form, 'doctors': doctors_list, 'patient_form': patients_form, 'patients': patients_list})
+
+
+def view_report(request, report_id):
+    try:
+        report = get_object_or_404(MedicalReportModel, report_id=report_id)
+    except Http404:
+        return redirect('medical-report')
+
+    return render(request, 'viewReport.html', {"report": report})
 
 
 def contact(request):
     return render(request, 'contact.html')
 
+
 def departments(request):
     return render(request, 'departments.html')
+
 
 def index(request):
     if request.method == 'POST':
         if Member.objects.filter(username=request.POST['username'], password=request.POST['password']).exists():
-            member = Member.objects.get(username=request.POST['username'], password=request.POST['password'])
+            member = Member.objects.get(
+                username=request.POST['username'], password=request.POST['password'])
             return render(request, 'index.html', {'member': member})
         else:
             return render(request, 'login.html')
@@ -99,19 +122,20 @@ def index(request):
 
 
 def appointment_form(request):
-        if request.method == 'POST':
-            form = AppointmentForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect('appointment_confirmation')  # Redirect to a confirmation page
-        else:
-            form = AppointmentForm()
+    if request.method == 'POST':
+        form = AppointmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Redirect to a confirmation page
+            return redirect('appointment_confirmation')
+    else:
+        form = AppointmentForm()
 
-        return render(request, 'appointment_form.html', {'form': form})
+    return render(request, 'appointment_form.html', {'form': form})
 
 
 def add(request):
-    if request.method=="POST":
+    if request.method == "POST":
         form = ProductForm(request.POST)
         if form.is_valid():
             form.save()
@@ -119,7 +143,7 @@ def add(request):
 
     else:
         form = ProductForm()
-        return render(request, "add.html",{'form':form})
+        return render(request, "add.html", {'form': form})
 
 
 def show(request):
@@ -158,15 +182,15 @@ def token(request):
     mpesa_access_token = json.loads(r.text)
     validated_mpesa_access_token = mpesa_access_token["access_token"]
 
-    return render(request, 'token.html', {"token":validated_mpesa_access_token})
+    return render(request, 'token.html', {"token": validated_mpesa_access_token})
 
 
 def pay(request):
-   return render(request, 'pay.html')
+    return render(request, 'pay.html')
 
 
 def stk(request):
-    if request.method =="POST":
+    if request.method == "POST":
         phone = request.POST['phone']
         amount = request.POST['amount']
         access_token = MpesaAccessToken.validated_mpesa_access_token
@@ -209,4 +233,3 @@ def imagedelete(request, id):
     image = ImageModel.objects.get(id=id)
     image.delete()
     return redirect('/showimage')
-

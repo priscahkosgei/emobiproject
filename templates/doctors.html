@@ -1,78 +1,120 @@
-{% extends 'Layout.html' %}
-{% load static %}
-{% block body %}
+{% extends 'Layout.html' %} {% load static %} {% block body %}
 
 <!-- ======= Doctors Section ======= -->
-    <style>
-    /* Add your custom styles here */
-    .formd {
-        max-width: 400px;
-        margin: 20px auto;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #f9f9f9;
-    }
+<style>
+  /* Add your custom styles here */
+  .formd {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
 
-    .formd label {
-        display: block;
-        margin-bottom: 8px;
-    }
+  .formd label {
+    display: block;
+    margin-bottom: 8px;
+  }
 
-    .formd input[type="text"],
-    .formd select {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-    }
+  .formd input[type="text"],
+  .formd select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
 
-    .formd input[type="submit"] {
-        background-color: #2fb8be;
-        color: white;
-        border: none;
-        padding: 15px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+  .formd input[type="submit"] {
+    background-color: #2fb8be;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 
-    .formd input[type="submit"]:hover {
-        background-color: #023f36;
-    }
+  .formd input[type="submit"]:hover {
+    background-color: #023f36;
+  }
 </style>
-    <section id="doctors" class="doctors section-bg header-margin" >
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-title">
-          <h2>Doctors</h2>
-          <p>In the heart of Wellcare Hospital at the University of Nairobi Kenya Science Campus resides a distinguished cadre of medical professionals committed to steering the course of healthcare excellence. Our accomplished team of doctors stands as the backbone of our commitment to comprehensive and compassionate patient care.</p>
+<section id="doctors" class="doctors section-bg header-margin">
+  <div class="container" data-aos="fade-up">
+                    <div class="section-title">
+                        <h2>Doctors</h2>
+                        <p>
+                            In the heart of Wellcare Hospital at the University of Nairobi Kenya
+                            Science Campus resides a distinguished cadre of medical professionals
+                            committed to steering the course of healthcare excellence. Our
+                            accomplished team of doctors stands as the backbone of our commitment to
+                            comprehensive and compassionate patient care.
+                        </p>
+                    </div>
+    <div class="row">
+        <div class="col-4">
+                <form class="formd" action="{% url 'doctors' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %} {{ doctors_form.as_p }}
+                    <input type="submit" value="Submit" />
+                </form>
         </div>
-          <form class="formd" action="{% url 'doctors' %}" method="post">
-              {% csrf_token %}
-              {{ doctors_form.as_p }}
-              <input type="submit" value="Submit">
-          </form>
-
-          {% for doctor in doctors %}
-          	<p>{{ doctor.fullname}}</p>
-          {% endfor %}
-        <div class="section-title">
-          <h2>PATIENT'S FORM</h2>
-          <p>In the heart of Wellcare Hospital at the University of Nairobi Kenya Science Campus resides a distinguished cadre of medical professionals committed to steering the course of healthcare excellence. Our accomplished team of doctors stands as the backbone of our commitment to comprehensive and compassionate patient care.</p>
+        <div class="col-8">
+                    <section id="doctors" class="doctors section-bg">
+                        <div class="container" data-aos="fade-up">
+                            <div class="row">
+                                {% for doctor in doctors %}
+                                <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+                                    <div class="member" data-aos="fade-up" data-aos-delay="100">
+                                        <div class="member-img">
+                                            <img src="{{doctor.image.url}}" alt="{{doctor.fullname}}" class="img-fluid" alt="">
+                                        </div>
+                                        <div class="">
+                                            <h4>{{doctor.fullname}}</h4>
+                                            <span>{{doctor.department}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </section>
         </div>
-       <form class="formd" action="{% url 'doctors' %}" method="post">
-              {% csrf_token %}
-              {{ patient_form.as_p }}
-              <input type="submit" value="Submit">
-       </form>
-
-           {% for doctor in doctors %}
-          	<p>{{ patient.fullname }}</p>
-          {% endfor %}
-      </div>
-{% endblock %}
+    </div>
+    <div class="section-title">
+      <h2>PATIENT'S FORM</h2>
+      <p>
+        In the heart of Wellcare Hospital at the University of Nairobi Kenya
+        Science Campus resides a distinguished cadre of medical professionals
+        committed to steering the course of healthcare excellence. Our
+        accomplished team of doctors stands as the backbone of our commitment to
+        comprehensive and compassionate patient care.
+      </p>
+    </div>
+        <div class="row">
+            <div class="col-4">
+                <form class="formd" action="{% url 'doctors' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %} {{ patient_form.as_p }}
+                    <input type="submit" value="Submit" />
+                </form>
+            </div>
+            <div class="col-8">
+                <section id="doctors" class="doctors section-bg">
+                    <div class="container" data-aos="fade-up">
+                        <div class="row">
+                            {% for patient in patients %}
+                            <div class="col-lg-3 col-md-6 d-flex align-items-center justify-center shadow-sm bg-white m-2 px-4 py-2">
+                                <h4>{{patient.full_name}}</h4>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+  </div>
+  {% endblock %}
+</section>

@@ -4,12 +4,12 @@ from django.urls import path
 from EmobilisHealthSystem import settings
 from healthApp import views
 from healthApp.views import appointment_form
-from django.conf.urls.static import  static
+from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.register, name= 'register'),
+    path('', views.register, name='register'),
     path('login/', views.login, name='login'),
     path('about/', views.about, name='about'),
     path('services/', views.services, name='services'),
@@ -20,9 +20,11 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('index/', views.index, name='index'),
     path('medical-report/', views.medical_report, name='medical-report'),
-    path('departments/', views.departments, name= 'departments'),
-    path('add/', views.add, name= 'add'),
-    path('show/', views.show, name ='show'),
+    path('medical-report/<int:report_id>/view',
+         views.view_report, name='medical-report-view'),
+    path('departments/', views.departments, name='departments'),
+    path('add/', views.add, name='add'),
+    path('show/', views.show, name='show'),
     path('delete/<int:id>', views.delete),
     path('edit/<int:id>', views.edit),
     path('update/<int:id>', views.update),
@@ -36,4 +38,5 @@ urlpatterns = [
 
 ]
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, ocument_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

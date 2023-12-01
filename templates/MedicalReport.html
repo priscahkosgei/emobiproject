@@ -7,23 +7,18 @@
    <div class="row d-flex">
        <div class="col-5 section-bg p-3">
           <h2 class="h2 text-uppercase p-3 text-center">Previous Reports</h2>
-
 {% for medical_report in medical_reports %}
     <div class="pb-2">
         <div class="card">
             <div class="card-body">
                 <div class="d-flex flex-row align-items-center justify-content-between">
-                    <p class="bg-secondary p-1 px-3 rounded text-white" id="todayDate"></p>
-                    <script>
-                        document.getElementById("todayDate").innerText = new Date().toLocaleDateString();
-                    </script>
-                    <h6 class="bg-info rounded-5 py-1 px-3 pointer-event" onclick="toggleInfo('{{ medical_report.id }}')">View</h6>
+                    <div class="bg-info px-2 py-1 text-dark bg-opacity-10 rounded">
+                        <p class="my-auto">{{medical_report.created_at}}</p>
+                    </div>
+                    <a href="{% url 'medical-report-view' report_id=medical_report.report_id %}" class="bg-info bg-opacity-50 text-dark rounded-5 px-1 px-4 pointer-event">View</a>
                 </div>
-                <p>{{ medical_report.report }}</p>
-                <div id="info{{ medical_report.id }}" style="display: none;">
-                    <!-- Additional information here -->
-                    <!-- Example: {{ medical_report.additional_info }} -->
-                </div>
+                <h6 class="my-auto text-dark">{{medical_report.title|default:""}}</h6>
+                <p>{{ medical_report.report|slice:":100" }}...</p>
             </div>
         </div>
     </div>

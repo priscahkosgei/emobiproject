@@ -7,25 +7,31 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ['name', 'price', 'description', 'color']
 
+
 class DoctorForm(forms.ModelForm):
     class Meta:
         model = DoctorsModel
         fields = '__all__'
+
+
 class ImageUploadForm(forms.ModelForm):
     class Meta:
         model = ImageModel
-        fields = ['image','title','price']
+        fields = ['image', 'title', 'price']
 
 
 class PatientsModelForm(forms.ModelForm):
     class Meta:
         model = PatientsModel
-        fields =['patient_id','full_name','date_of_birth','residence','id_no']
+        fields = ['full_name',
+                  'date_of_birth', 'residence', 'id_no']
+
 
 class MedicalReportForm(forms.ModelForm):
     class Meta:
         model = MedicalReportModel
-        fields =['report_id', 'created_at', 'report', 'created_at', 'patient_id', 'doctors_id']
+        fields = ['title', 'report', 'patient_id', 'doctors_id', 'created_at']
+
 
 class DoctorsModelForm(forms.ModelForm):
     class Meta:
@@ -34,11 +40,11 @@ class DoctorsModelForm(forms.ModelForm):
 
     department = forms.ChoiceField(choices=DoctorsModel.DEPARTMENT_CHOICES)
 
-
     class AppointmentForm(forms.ModelForm):
         class Meta:
             model = Appointment
-            fields = ['patient_name', 'contact_number', 'appointment_date', 'appointment_time', 'reason_for_visit']
+            fields = ['patient_name', 'contact_number',
+                      'appointment_date', 'appointment_time', 'reason_for_visit']
 
 
 class AppointmentForm:
