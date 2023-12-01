@@ -75,15 +75,15 @@ def doctors(request):
             form.save()
             return redirect('doctors')
         else:
-            errors = form.errors
-            return render(request, 'doctors.html', {'form': form, 'errors': errors})
-            # patients_form = PatientsModelForm(request.POST)
-            # if patients_form.is_valid():
-            #     patients_form.save()
-            #     return redirect('doctors')
-            # else:
-            #     errors = patients_form.errors
-            #     return render(request, 'doctors.html', {'form': patients_form, 'errors': errors})
+            # errors = form.errors
+            # return render(request, 'doctors.html', {'form': form, 'errors': errors})
+            patients_form = PatientsModelForm(request.POST)
+            if patients_form.is_valid():
+                patients_form.save()
+                return redirect('doctors')
+            else:
+                errors = patients_form.errors
+                return render(request, 'doctors.html', {'form': patients_form, 'errors': errors})
     else:
         doctor_form = DoctorsModelForm()
         patients_form = PatientsModelForm()
