@@ -59,96 +59,20 @@
           </form>
 
           {% for doctor in doctors %}
-          	<p>{{ doctor.fullname }}</p>
+          	<p>{{ doctor.fullname}}</p>
           {% endfor %}
-
+        <div class="section-title">
+          <h2>PATIENT'S FORM</h2>
+          <p>In the heart of Wellcare Hospital at the University of Nairobi Kenya Science Campus resides a distinguished cadre of medical professionals committed to steering the course of healthcare excellence. Our accomplished team of doctors stands as the backbone of our commitment to comprehensive and compassionate patient care.</p>
+        </div>
        <form class="formd" action="{% url 'doctors' %}" method="post">
               {% csrf_token %}
               {{ patient_form.as_p }}
               <input type="submit" value="Submit">
-          </form>
+       </form>
 
-          {% for patient in patients %}
-          	<p>{{patient.fullname }}</p>
+           {% for doctor in doctors %}
+          	<p>{{ patient.fullname }}</p>
           {% endfor %}
-
-
-        <div class="row">
-
-          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
-            <div class="member" data-aos="fade-up" data-aos-delay="100">
-              <div class="member-img">
-                <img src="{% static 'assets/img/doctors/do.jpg' %}" class="img-fluid" alt="">
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-              <div class="member-info">
-                <h4>Faith Wavinya</h4>
-                <span>Chief Medical Officer</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
-            <div class="member" data-aos="fade-up" data-aos-delay="200">
-              <div class="member-img">
-                <img src="{% static 'assets/img/doctors/doc-2.jpg' %}" class="img-fluid" alt="">
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-              <div class="member-info">
-                <h4>Irene Sifuna</h4>
-                <span>Anesthesiologist</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
-            <div class="member" data-aos="fade-up" data-aos-delay="300">
-              <div class="member-img">
-                <img src="{% static 'assets/img/doctors/doc-3.jpg' %}" class="img-fluid" alt="">
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-              <div class="member-info">
-                <h4>Meshack Emokol</h4>
-                <span>Cardiology</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
-            <div class="member" data-aos="fade-up" data-aos-delay="400">
-              <div class="member-img">
-                <img src="{% static 'assets/img/doctors/doc-4.jpg' %}" class="img-fluid" alt="">
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-              <div class="member-info">
-                <h4>Milton Obote</h4>
-                <span>Neurosurgeon</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
       </div>
-    </section><!-- End Doctors Section -->
 {% endblock %}

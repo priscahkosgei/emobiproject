@@ -1,5 +1,5 @@
 from django import forms
-from healthApp.models import Product, ImageModel, PatientsModel, DoctorsModel, MedicalReportModel
+from healthApp.models import Product, ImageModel, PatientsModel, DoctorsModel, MedicalReportModel, Appointment
 
 
 class ProductForm(forms.ModelForm):
@@ -30,6 +30,16 @@ class MedicalReportForm(forms.ModelForm):
 class DoctorsModelForm(forms.ModelForm):
     class Meta:
         model = DoctorsModel
-        fields = ['fullname', 'id_no', 'department']
+        fields = ['fullname', 'id_no', 'department', 'image']
 
     department = forms.ChoiceField(choices=DoctorsModel.DEPARTMENT_CHOICES)
+
+
+    class AppointmentForm(forms.ModelForm):
+        class Meta:
+            model = Appointment
+            fields = ['patient_name', 'contact_number', 'appointment_date', 'appointment_time', 'reason_for_visit']
+
+
+class AppointmentForm:
+    pass

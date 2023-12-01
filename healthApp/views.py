@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from requests.auth import HTTPBasicAuth
 
 from healthApp.models import Member, Product,ImageModel, MedicalReportModel, DoctorsModel, PatientsModel
-from healthApp.forms import ProductForm,ImageUploadForm, MedicalReportForm, DoctorsModelForm, DoctorForm, PatientsModelForm
+from healthApp.forms import ProductForm,ImageUploadForm, MedicalReportForm, DoctorsModelForm, DoctorForm, PatientsModelForm, AppointmentForm
 from django.http import HttpResponse
 from healthApp.credentials import LipanaMpesaPpassword,MpesaAccessToken,MpesaC2bCredential
 
@@ -16,7 +16,7 @@ import requests
 
 def doctorsform(request):
     if request.method == 'POST':
-        form = DoctorForm(request.POST)
+        form = DoctorForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('doctor_list')  # Redirect to a view displaying the list of doctors
@@ -71,13 +71,14 @@ def doctors(request):
                 patients_form.save()
                 return redirect('doctors')
             else:
-                return  redirect('doctors')
+                return redirect('doctors')
     else:
         doctor_form = DoctorsModelForm()
+        print("Hello there")
         patients_form = PatientsModelForm()
         patients_list = PatientsModel.objects.all()
-        doctors_list  = DoctorsModel.objects.all()
-        return render(request,'doctors.html', {'doctors_form': doctor_form, 'doctors': doctors_list,'patient_form':patients_form, 'patients':patients_list})
+        doctors_list = DoctorsModel.objects.all()
+        return render(request,'doctors.html', {'doctors_form': doctor_form, 'doctors': doctors_list,'patient_form': patients_form, 'patients':patients_list})
 
 
 def contact(request):
@@ -95,6 +96,18 @@ def index(request):
             return render(request, 'login.html')
     else:
         return render(request, 'login.html')
+
+
+def appointment_form(request):
+        if request.method == 'POST':
+            form = AppointmentForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('appointment_confirmation')  # Redirect to a confirmation page
+        else:
+            form = AppointmentForm()
+
+        return render(request, 'appointment_form.html', {'form': form})
 
 
 def add(request):
@@ -196,3 +209,4 @@ def imagedelete(request, id):
     image = ImageModel.objects.get(id=id)
     image.delete()
     return redirect('/showimage')
+

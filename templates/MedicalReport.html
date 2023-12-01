@@ -6,21 +6,35 @@
        <link rel="stylesheet" href="{% static 'css/custom/styles.css' %}">
    <div class="row d-flex">
        <div class="col-5 section-bg p-3">
-           <h2 class="h2 text-uppercase p-3 text-center">Previous Reports</h2>
-           {% for medical_report in medical_reports %}
-               <div class="pb-2">
-              <div class="card">
-                <div class="card-body">
-                  <div class="d-flex flex-row align-items-center justify-content-between">
-                      <p class="bg-secondary p-1 px-3 rounded text-white">21st Nov 2023</p>
-                      <h6 class="bg-info rounded-5 py-1 px-3 pointer-event">View</h6>
-                  </div>
-                    <p>{{ medical_report.report }}</p>
-                </div>
-              </div>
-            </div>
+          <h2 class="h2 text-uppercase p-3 text-center">Previous Reports</h2>
 
-           {% endfor %}
+{% for medical_report in medical_reports %}
+    <div class="pb-2">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row align-items-center justify-content-between">
+                    <p class="bg-secondary p-1 px-3 rounded text-white" id="todayDate"></p>
+                    <script>
+                        document.getElementById("todayDate").innerText = new Date().toLocaleDateString();
+                    </script>
+                    <h6 class="bg-info rounded-5 py-1 px-3 pointer-event" onclick="toggleInfo('{{ medical_report.id }}')">View</h6>
+                </div>
+                <p>{{ medical_report.report }}</p>
+                <div id="info{{ medical_report.id }}" style="display: none;">
+                    <!-- Additional information here -->
+                    <!-- Example: {{ medical_report.additional_info }} -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+<script>
+    function toggleInfo(reportId) {
+        var infoDiv = document.getElementById("info" + reportId);
+        infoDiv.style.display = infoDiv.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
        </div>
        <div class="col-7">
             <section id="appointment" class="appointment section-bg">
@@ -37,6 +51,7 @@
               <input type="submit" value="Submit Report">
           </form>
       </div>
+
     </section><!-- End Appointment Section -->
        </div>
    </div>

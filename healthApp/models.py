@@ -82,7 +82,7 @@ class DoctorsModel(models.Model):
         # Add more choices as needed
     ]
     department = models.CharField(max_length=100, choices=DEPARTMENT_CHOICES)
-    image = models.ImageField(upload_to='doctors/', default='default_image.jpg')
+    image = models.ImageField(upload_to='doctors/')
 
     def __str__(self):
         return self.fullname
@@ -100,4 +100,18 @@ def generate_doctors_id(sender, instance, **kwargs):
 @receiver(pre_save, sender=DoctorsModel)
 def uppercase_doctors_id(sender, instance, **kwargs):
     instance.doctors_id = instance.doctors_id.upper()
+
+    # models.py
+    from django.db import models
+
+class Appointment(models.Model):
+        patient_name = models.CharField(max_length=100)
+        contact_number = models.CharField(max_length=15)
+        appointment_date = models.DateField()
+        appointment_time = models.TimeField()
+        reason_for_visit = models.TextField()
+
+        def __str__(self):
+            return f"{self.patient_name} - {self.appointment_date} {self.appointment_time}"
+
 
