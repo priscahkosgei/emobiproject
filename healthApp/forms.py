@@ -1,5 +1,27 @@
 from django import forms
-from healthApp.models import Product, ImageModel, PatientsModel, DoctorsModel, MedicalReportModel, Appointment, Hospital
+from healthApp.models import Product, ImageModel, PatientsModel, DoctorsModel, MedicalReportModel, Appointment, Hospital, CustomUser
+from django.contrib.auth.forms import UserCreationForm
+
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(label="Email", required=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ("email",)
+
+    def __init__(self, *args, **kwargs):
+        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})
+        self.fields['password1'].widget = forms.HiddenInput()
+        self.fields['password2'].widget = forms.HiddenInput()
+
+    def save(self, commit=True):
+        user = super(CustomUserCreationForm, self).save(commit=False)
+        user.username = self.cleaned_data["email"]
+        if commit:
+            user.save()
+        return user
 
 
 class HospitalForm(forms.ModelForm):

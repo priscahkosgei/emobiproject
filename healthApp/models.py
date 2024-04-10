@@ -1,9 +1,24 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from datetime import datetime
 
-# Create your models here.
+
+class CustomUser(AbstractUser):
+    USER_TYPE_CHOICES = [
+        ('hospital', 'Hospital'),
+        ('doctor', 'Doctor'),
+        ('patient', 'Patient')
+    ]
+    user_type = models.CharField(('user type'), max_length=20, choices=USER_TYPE_CHOICES)
+    email = models.EmailField(('email address'), unique=True)
+
+    USERNAME_FIELD = 'email'  # Set email as the unique identifier for authentication
+    REQUIRED_FIELDS = ['user_type', 'username']
+
+    def __str__(self):
+        return self.email
 
 class Hospital(models.Model):
     """
