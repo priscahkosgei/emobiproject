@@ -22,24 +22,23 @@ def create_hospital(request):
     """
     if request.method == 'POST':
         hospital_form = HospitalForm(request.POST)
+        print(request.POST)
         user_form = CustomUserCreationForm(request.POST)
 
         if hospital_form.is_valid() and user_form.is_valid():
-            # Save hospital data
-            # Don't save yet, as we need to associate the user
-            hospital = hospital_form.save(commit=False)
-            hospital.save()
+            user_form.cleaned_data['user_type'] = 'hospital'
 
             # Save user data
-            user = user_form.save(commit=False)
-            user.user_type = 'hospital'  # Assuming user_type is a field in your CustomUser model
-            user.save()
+            user = user_form.save()
+             # Assuming user_type is a field in your CustomUser model
 
             # Associate the user with the hospital
+            hospital = hospital_form.save(commit=False)
             hospital.user = user
             hospital.save()
 
             return redirect('create_hospital')
+        print(user_form.errors)
     else:
         hospital_form = HospitalForm()
         user_form = CustomUserCreationForm()
