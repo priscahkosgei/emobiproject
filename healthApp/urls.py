@@ -36,6 +36,8 @@ urlpatterns = [
     path('stk/', views.stk, name='stk'),
     path('token/', views.token, name='token'),
 
+    path('hospitals/new', views.create_hospital, name='create_hospital')
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

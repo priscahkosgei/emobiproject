@@ -53,7 +53,7 @@ class Patient(models.Model):
 
 class MedicalReport(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    doctor = models.ForeignKey(Doctor, null=True)
+    doctor = models.ForeignKey(Doctor, null=True, on_delete=models.SET_NULL)
     content = models.TextField()
     created_at = models.DateField(default=datetime.now())
     title = models.CharField(max_length=255)

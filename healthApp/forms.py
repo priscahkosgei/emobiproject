@@ -1,6 +1,11 @@
 from django import forms
-from healthApp.models import Product, ImageModel, PatientsModel, DoctorsModel, MedicalReportModel, Appointment
+from healthApp.models import Product, ImageModel, PatientsModel, DoctorsModel, MedicalReportModel, Appointment, Hospital
 
+
+class HospitalForm(forms.ModelForm):
+    class Meta:
+        model = Hospital
+        fields = ['full_name', 'county', 'constituency', 'town', 'hospital_type']
 
 class ProductForm(forms.ModelForm):
     class Meta:

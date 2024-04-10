@@ -81,4 +81,25 @@ input[type="submit"]:hover {
     background-color: #264657;
 }
 
+/* Create hospital */
+.hospital-section{
+    width: 80%;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+}
+
+.hospital-form{
+    flex: 2;
+}
+
+.hospital-form h2{
+    margin-bottom: 3px;
+}
+
+.hospital-list-table{
+    flex: 3;
+}
+
 

@@ -1,0 +1,46 @@
+<!-- {% extends 'Layout.html' %}  -->
+{% block body %}
+<!-- <a href="{% url 'doctorsform' %}">Add Doctor</a> -->
+<section class="container-fluid header-margin d-flex gap-5 hospital-section">
+<div class="d-flex flex-column hospital-form">
+<h2>Create Hospital</h2>
+<form
+  class="formd"
+  action="{% url 'create_hospital' %}"
+  method="post"
+  enctype="multipart/form-data"
+  style="width: 100%; padding: 10px;"
+>
+  {% csrf_token %} {{ form.as_p }}
+  <input type="submit" value="Submit" />
+</form>
+</div>
+<div class="hospital-list-table">
+    <h2>Registered Hospitals</h2>
+    <table class="table border h-max">
+    <thead class="thead-dark">
+      <tr>
+        <th class="border p-2">ID</th>
+        <th class="border p-2">Name</th>
+        <th class="border p-2">Type</th>
+        <th class="border p-2">County</th>
+        <th class="border p-2">Constituency</th>
+        <th class="border p-2">Town</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Add your table rows dynamically here -->
+      <!-- Example row -->
+      <tr class="h-max">
+        <td class="border p-2">1</td>
+        <td class="border p-2">Hospital Name</td>
+        <td class="border p-2">Type of Hospital</td>
+        <td class="border p-2">County Name</td>
+        <td class="border p-2">Constituency Name</td>
+        <td class="border p-2">Town Name</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</section>
+{% endblock %}
