@@ -29,16 +29,16 @@
       </tr>
     </thead>
     <tbody>
-      <!-- Add your table rows dynamically here -->
-      <!-- Example row -->
+    {% for hospital in hospitals_list %}
       <tr class="h-max">
-        <td class="border p-2">1</td>
-        <td class="border p-2">Hospital Name</td>
-        <td class="border p-2">Type of Hospital</td>
-        <td class="border p-2">County Name</td>
-        <td class="border p-2">Constituency Name</td>
-        <td class="border p-2">Town Name</td>
+        <td class="border p-2">{{ hospital.id }}</td>
+        <td class="border p-2">{{ hospital.full_name }}</td>
+        <td class="border p-2">{{ hospital.hospital_type }}</td>
+        <td class="border p-2">{{ hospital.county }}</td>
+        <td class="border p-2">{{ hospital.constituency }}</td>
+        <td class="border p-2">{{ hospital.town }}</td>
       </tr>
+      {% endfor %}
     </tbody>
   </table>
 </div>

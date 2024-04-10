@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from requests.auth import HTTPBasicAuth
 from django.http import Http404
 
-from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel
+from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel, Hospital
 from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorsModelForm, DoctorForm, PatientsModelForm, AppointmentForm, HospitalForm
 from django.http import HttpResponse
 from healthApp.credentials import LipanaMpesaPpassword, MpesaAccessToken, MpesaC2bCredential
@@ -25,7 +25,9 @@ def create_hospital(request):
         return redirect('create_hospital')
     else:
         form = HospitalForm()
-        return render(request, 'create_hospital.html', {'form': form})
+        hospitals = Hospital.objects.all()
+        return render(request, 'create_hospital.html', {'form': form, 'hospitals_list': hospitals})
+
 
 def doctorsform(request):
     if request.method == 'POST':
