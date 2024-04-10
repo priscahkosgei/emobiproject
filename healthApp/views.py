@@ -5,15 +5,48 @@ from django.shortcuts import render, redirect, get_object_or_404
 from requests.auth import HTTPBasicAuth
 from django.http import Http404
 
-from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel
-from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorsModelForm, DoctorForm, PatientsModelForm, AppointmentForm
+from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel, Hospital
+from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorsModelForm, DoctorForm, PatientsModelForm, AppointmentForm, HospitalForm, CustomUserCreationForm
 from django.http import HttpResponse
 from healthApp.credentials import LipanaMpesaPpassword, MpesaAccessToken, MpesaC2bCredential
+
+from django.contrib.auth.forms import UserCreationForm
 
 import requests
 
 
 # Create your views here.
+def create_hospital(request):
+    """
+    Register a new hospital
+    """
+    if request.method == 'POST':
+        hospital_form = HospitalForm(request.POST)
+        user_form = CustomUserCreationForm(request.POST)
+
+        if hospital_form.is_valid() and user_form.is_valid():
+            # Save hospital data
+            # Don't save yet, as we need to associate the user
+            hospital = hospital_form.save(commit=False)
+            hospital.save()
+
+            # Save user data
+            user = user_form.save(commit=False)
+            user.user_type = 'hospital'  # Assuming user_type is a field in your CustomUser model
+            user.save()
+
+            # Associate the user with the hospital
+            hospital.user = user
+            hospital.save()
+
+            return redirect('create_hospital')
+    else:
+        hospital_form = HospitalForm()
+        user_form = CustomUserCreationForm()
+
+    hospitals = Hospital.objects.all()
+    return render(request, 'create_hospital.html', {'hospital_form': hospital_form, 'user_form': user_form, 'hospitals_list': hospitals})
+
 
 def doctorsform(request):
     if request.method == 'POST':

@@ -1,10 +1,78 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from datetime import datetime
 
-# Create your models here.
 
+class CustomUser(AbstractUser):
+    USER_TYPE_CHOICES = [
+        ('hospital', 'Hospital'),
+        ('doctor', 'Doctor'),
+        ('patient', 'Patient')
+    ]
+    user_type = models.CharField(('user type'), max_length=20, choices=USER_TYPE_CHOICES)
+    email = models.EmailField(('email address'), unique=True)
+
+    USERNAME_FIELD = 'email'  # Set email as the unique identifier for authentication
+    REQUIRED_FIELDS = ['user_type', 'username']
+
+    def __str__(self):
+        return self.email
+
+class Hospital(models.Model):
+    """
+    Defines Hospital model
+    """
+    HOSPITAL_TYPE_CHOICES = (
+        ('private', 'Private'),
+        ('public', 'Public')
+    )
+
+    full_name = models.CharField(max_length=255)
+    county = models.CharField(max_length=100)
+    constituency = models.CharField(max_length=150)
+    town = models.CharField(max_length=200)
+    hospital_type = models.CharField(
+        max_length=100, choices=HOSPITAL_TYPE_CHOICES)
+
+
+class Doctor(models.Model):
+    """
+    Defines Doctor model
+    """
+    hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100)
+    DEPARTMENT_CHOICES = [
+        ('cardiology', 'Cardiology'),
+        ('hepatology', 'Hepatology'),
+        ('pediatrics', 'Pediatrics'),
+        ('neurology', 'Neurology'),
+    ]
+    department = models.CharField(max_length=100, choices=DEPARTMENT_CHOICES)
+    image = models.ImageField(upload_to='doctors/')
+
+class Patient(models.Model):
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female')
+    ]
+    full_name = models.CharField(max_length=200)
+    date_of_birth = models.DateField()
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES)
+    image = models.ImageField(upload_to='patients/')
+    contact = models.CharField(max_length=30)
+    county = models.CharField(max_length=100)
+    constituency = models.CharField(max_length=150)
+    town = models.CharField(max_length=100)
+
+class MedicalReport(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, null=True, on_delete=models.SET_NULL)
+    content = models.TextField()
+    created_at = models.DateField(default=datetime.now())
+    title = models.CharField(max_length=255)
+    drugs = models.TextField()
 
 class Member(models.Model):
     fullname = models.CharField(max_length=100)

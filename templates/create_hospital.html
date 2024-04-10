@@ -1,0 +1,47 @@
+<!-- {% extends 'Layout.html' %}  -->
+{% block body %}
+<!-- <a href="{% url 'doctorsform' %}">Add Doctor</a> -->
+<section class="container-fluid header-margin d-flex gap-5 hospital-section">
+<div class="d-flex flex-column hospital-form">
+<h2>Create Hospital</h2>
+<form
+  class="formd"
+  action="{% url 'create_hospital' %}"
+  method="post"
+  enctype="multipart/form-data"
+  style="width: 100%; padding: 10px;"
+>
+  {% csrf_token %} {{ hospital_form.as_p }}
+  {% csrf_token %} {{ user_form.as_p }}
+  <input type="submit" value="Submit" />
+</form>
+</div>
+<div class="hospital-list-table">
+    <h2>Registered Hospitals</h2>
+    <table class="table border h-max">
+    <thead class="thead-dark">
+      <tr>
+        <th class="border p-2">ID</th>
+        <th class="border p-2">Name</th>
+        <th class="border p-2">Type</th>
+        <th class="border p-2">County</th>
+        <th class="border p-2">Constituency</th>
+        <th class="border p-2">Town</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for hospital in hospitals_list %}
+      <tr class="h-max">
+        <td class="border p-2">{{ hospital.id }}</td>
+        <td class="border p-2">{{ hospital.full_name }}</td>
+        <td class="border p-2">{{ hospital.hospital_type }}</td>
+        <td class="border p-2">{{ hospital.county }}</td>
+        <td class="border p-2">{{ hospital.constituency }}</td>
+        <td class="border p-2">{{ hospital.town }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</section>
+{% endblock %}
