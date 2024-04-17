@@ -15,6 +15,11 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['email'].widget.attrs.update({'class': 'form-control'})
         self.fields['password1'].widget = forms.HiddenInput()
         self.fields['password2'].widget = forms.HiddenInput()
+        # Set initial value for password1
+        self.fields['password1'].initial = '@hospital1'
+        # Set initial value for password2
+        self.fields['password2'].initial = '@hospital1'
+
 
     def save(self, commit=True):
         user = super(CustomUserCreationForm, self).save(commit=False)

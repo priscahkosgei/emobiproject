@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     # 'healthApp.apps.HealthappConfig',
 ]
 
-# AUTH_USER_MODEL = 'healthApp.CustomUser'
+AUTH_USER_MODEL = 'healthApp.CustomUser'
 
 MPESA_ENVIRONMENT = 'sandbox'
 MPESA_CONSUMER_KEY = 'Ve9AuhTwjjyAkPxdDDABpNYebvJC7G12'

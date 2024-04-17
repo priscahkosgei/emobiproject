@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from datetime import datetime
+from django.utils import timezone
 
 
 class CustomUser(AbstractUser):
@@ -17,6 +18,23 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'  # Set email as the unique identifier for authentication
     REQUIRED_FIELDS = ['user_type', 'username']
 
+    # Add unique related_name for groups and user_permissions fields
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='custom_user_groups',
+        blank=True,
+        verbose_name='groups',
+        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='custom_user_permissions',
+        blank=True,
+        verbose_name='user permissions',
+        help_text='Specific permissions for this user.',
+        related_query_name='custom_user',
+    )
+
     def __str__(self):
         return self.email
 
@@ -29,7 +47,7 @@ class Hospital(models.Model):
         ('public', 'Public')
     )
 
-    full_name = models.CharField(max_length=255)
+    full_name = models.CharField(max_length=255, unique=True)
     county = models.CharField(max_length=100)
     constituency = models.CharField(max_length=150)
     town = models.CharField(max_length=200)
@@ -70,7 +88,7 @@ class MedicalReport(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, null=True, on_delete=models.SET_NULL)
     content = models.TextField()
-    created_at = models.DateField(default=datetime.now())
+    created_at = models.DateField(default=timezone.now())
     title = models.CharField(max_length=255)
     drugs = models.TextField()
 
