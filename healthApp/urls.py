@@ -10,7 +10,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.register, name='register'),
-    path('login/', views.login, name='login'),
+    path('accounts/login/', views.loginUser, name='login'),
     path('about/', views.about, name='about'),
     path('services/', views.services, name='services'),
     path('doctors/', views.doctors, name='doctors'),
@@ -32,9 +32,9 @@ urlpatterns = [
     path('showimage/', views.show_image, name='image'),
     path('imagedelete/<int:id>', views.imagedelete),
 
-    path('pay/', views.pay, name='pay'),
-    path('stk/', views.stk, name='stk'),
-    path('token/', views.token, name='token'),
+    # path('pay/', views.pay, name='pay'),
+    # path('stk/', views.stk, name='stk'),
+    # path('token/', views.token, name='token'),
 
     path('hospitals/new', views.create_hospital, name='create_hospital')
 

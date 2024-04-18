@@ -6,20 +6,24 @@ from requests.auth import HTTPBasicAuth
 from django.http import Http404
 
 from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel, Hospital
-from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorsModelForm, DoctorForm, PatientsModelForm, AppointmentForm, HospitalForm, CustomUserCreationForm
+from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorsModelForm, DoctorForm,\
+    PatientsModelForm, AppointmentForm, HospitalForm, CustomUserCreationForm, LoginForm
 from django.http import HttpResponse
-from healthApp.credentials import LipanaMpesaPpassword, MpesaAccessToken, MpesaC2bCredential
-
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 import requests
 
 
 # Create your views here.
+@login_required
 def create_hospital(request):
     """
     Register a new hospital
     """
+    current_user = request.user
+    print(current_user)
     if request.method == 'POST':
         hospital_form = HospitalForm(request.POST)
         print(request.POST)
@@ -44,6 +48,7 @@ def create_hospital(request):
         user_form = CustomUserCreationForm()
 
     hospitals = Hospital.objects.all()
+    print(hospitals[1].__dict__)
     return render(request, 'create_hospital.html', {'hospital_form': hospital_form, 'user_form': user_form, 'hospitals_list': hospitals})
 
 
@@ -85,8 +90,20 @@ def departments(request):
     return render(request, 'departments.html')
 
 
-def login(request):
-    return render(request, 'login.html')
+def loginUser(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+        else:
+            form = LoginForm()
+            return render(request, 'login.html', {'form': form, 'error': "Invalid credentials"})
+        return redirect('login')
+    elif request.method == 'GET':
+        form = LoginForm()
+        return render(request, 'login.html', {'form': form})
 
 
 def about(request):

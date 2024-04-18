@@ -28,6 +28,11 @@ class CustomUserCreationForm(UserCreationForm):
             user.save()
         return user
 
+class LoginForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'password', 'user_type']
+
 
 class HospitalForm(forms.ModelForm):
     class Meta:

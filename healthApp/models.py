@@ -47,6 +47,7 @@ class Hospital(models.Model):
         ('public', 'Public')
     )
 
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, default=None)
     full_name = models.CharField(max_length=255, unique=True)
     county = models.CharField(max_length=100)
     constituency = models.CharField(max_length=150)
