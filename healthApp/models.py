@@ -1,16 +1,41 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from datetime import datetime
 from django.utils import timezone
 
 
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, user_type, username,  password=None, **extra_fields):
+        if not username:
+            raise ValueError('The username must be set')
+        if not user_type:
+            raise ValueError('The user type must be set')
+        user = self.model(username=username,
+                          user_type=user_type, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, user_type, username, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self.create_user(email, user_type, username, password, **extra_fields)
+
+
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = [
         ('hospital', 'Hospital'),
         ('doctor', 'Doctor'),
-        ('patient', 'Patient')
+        ('patient', 'Patient'),
+        ('admin', 'Admin')
     ]
     user_type = models.CharField(('user type'), max_length=20, choices=USER_TYPE_CHOICES)
     email = models.EmailField(('email address'), unique=True)
@@ -18,25 +43,28 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'  # Set email as the unique identifier for authentication
     REQUIRED_FIELDS = ['user_type', 'username']
 
+    objects = CustomUserManager()
+
     # Add unique related_name for groups and user_permissions fields
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='custom_user_groups',
-        blank=True,
-        verbose_name='groups',
-        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='custom_user_permissions',
-        blank=True,
-        verbose_name='user permissions',
-        help_text='Specific permissions for this user.',
-        related_query_name='custom_user',
-    )
+    # groups = models.ManyToManyField(
+    #     'auth.Group',
+    #     related_name='custom_user_groups',
+    #     blank=True,
+    #     verbose_name='groups',
+    #     help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+    # )
+    # user_permissions = models.ManyToManyField(
+    #     'auth.Permission',
+    #     related_name='custom_user_permissions',
+    #     blank=True,
+    #     verbose_name='user permissions',
+    #     help_text='Specific permissions for this user.',
+    #     related_query_name='custom_user',
+    # )
 
     def __str__(self):
         return self.email
+
 
 class Hospital(models.Model):
     """

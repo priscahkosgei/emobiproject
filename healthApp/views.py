@@ -10,14 +10,40 @@ from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, Doc
     PatientsModelForm, AppointmentForm, HospitalForm, CustomUserCreationForm, LoginForm
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from .decorators import admin_required
 
 import requests
 
 
+def login_user(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            form = LoginForm()
+            return render(request, 'login.html', {'form': form, 'error': "Invalid credentials"})
+
+    elif request.method == 'GET':
+        form = LoginForm()
+        return render(request, 'login.html', {'form': form})
+
+
+def logout_user(request):
+    """
+    Logout view.
+    """
+    logout(request)
+    return redirect('login')  # Redirect to the login page after logout
+
 # Create your views here.
 @login_required
+@admin_required
 def create_hospital(request):
     """
     Register a new hospital
@@ -90,20 +116,6 @@ def departments(request):
     return render(request, 'departments.html')
 
 
-def loginUser(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            login(request, user)
-        else:
-            form = LoginForm()
-            return render(request, 'login.html', {'form': form, 'error': "Invalid credentials"})
-        return redirect('login')
-    elif request.method == 'GET':
-        form = LoginForm()
-        return render(request, 'login.html', {'form': form})
 
 
 def about(request):
@@ -159,16 +171,7 @@ def departments(request):
 
 
 def index(request):
-    if request.method == 'POST':
-        if Member.objects.filter(username=request.POST['username'], password=request.POST['password']).exists():
-            member = Member.objects.get(
-                username=request.POST['username'], password=request.POST['password'])
-            return render(request, 'index.html', {'member': member})
-        else:
-            return render(request, 'login.html')
-    else:
-        return render(request, 'login.html')
-
+    return render(request, 'index.html')
 
 def appointment_form(request):
     if request.method == 'POST':
