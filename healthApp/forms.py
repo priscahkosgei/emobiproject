@@ -1,5 +1,5 @@
 from django import forms
-from healthApp.models import Product, ImageModel, PatientsModel, DoctorsModel, MedicalReportModel, Appointment, Hospital, CustomUser
+from healthApp.models import Product, ImageModel, PatientsModel, DoctorsModel, MedicalReportModel, Appointment, Hospital, CustomUser, Doctor
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -31,7 +31,7 @@ class CustomUserCreationForm(UserCreationForm):
 class LoginForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['email', 'password', 'user_type']
+        fields = ['email', 'password']
 
 
 class HospitalForm(forms.ModelForm):
@@ -39,16 +39,17 @@ class HospitalForm(forms.ModelForm):
         model = Hospital
         fields = ['full_name', 'county', 'constituency', 'town', 'hospital_type']
 
+
+class DoctorForm(forms.ModelForm):
+    class Meta:
+        model = Doctor
+        fields = ['full_name', 'department']
+
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['name', 'price', 'description', 'color']
 
-
-class DoctorForm(forms.ModelForm):
-    class Meta:
-        model = DoctorsModel
-        fields = '__all__'
 
 
 class ImageUploadForm(forms.ModelForm):

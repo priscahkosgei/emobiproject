@@ -6,8 +6,7 @@ from requests.auth import HTTPBasicAuth
 from django.http import Http404
 
 from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel, Hospital
-from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorsModelForm, DoctorForm,\
-    PatientsModelForm, AppointmentForm, HospitalForm, CustomUserCreationForm, LoginForm
+from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorForm, PatientsModelForm, AppointmentForm, HospitalForm, CustomUserCreationForm, LoginForm
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
@@ -48,6 +47,15 @@ def logout_user(request):
 def hospital_dashboard(request):
     return render(request, 'hospitals/index.html')
 
+@login_required
+@hospital_required
+def add_doctor(request):
+    if request.method == "POST":
+        return redirect('add_doctor')
+    else:
+        form = DoctorForm()
+        return render(request, 'hospitals/add_doctor.html', {'form': form})
+
 
 # Create your views here.
 @login_required
@@ -85,17 +93,6 @@ def create_hospital(request):
     print(hospitals[1].__dict__)
     return render(request, 'create_hospital.html', {'hospital_form': hospital_form, 'user_form': user_form, 'hospitals_list': hospitals})
 
-
-def doctorsform(request):
-    if request.method == 'POST':
-        form = DoctorForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            # Redirect to a view displaying the list of doctors
-            return redirect('doctor_list')
-    else:
-        form = DoctorForm()
-        return render(request, 'doctorsform.html', {'form': form})
 
 
 def register(request):
