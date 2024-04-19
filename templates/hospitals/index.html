@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<!-- Navigation bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="#">Hospital Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Doctors</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Patients</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Staff</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Hospital Information Widget -->
+        <div class="col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    Hospital Information
+                </div>
+                <div class="card-body">
+                    <!-- Display hospital information here -->
+                    <p>Hospital Name: XYZ Hospital</p>
+                    <p>Address: 123 Main Street</p>
+                    <p>City: Anytown</p>
+                    <!-- Add more hospital info as needed -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Number of Doctors Widget -->
+        <div class="col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    Number of Doctors
+                </div>
+                <div class="card-body">
+                    <!-- Display number of doctors here -->
+                    <h1>25</h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Number of Other Staff Widget -->
+        <div class="col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    Number of Other Staff
+                </div>
+                <div class="card-body">
+                    <!-- Display number of other staff here -->
+                    <h1>15</h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Number of Patients Widget -->
+        <div class="col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    Number of Patients
+                </div>
+                <div class="card-body">
+                    <!-- Display number of patients here -->
+                    <h1>100</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctors Table -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    Doctors
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Specialization</th>
+                            <th>Email</th>
+                            <!-- Add more columns as needed -->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Display doctors information here -->
+                        <tr>
+                            <td>1</td>
+                            <td>Dr. John Doe</td>
+                            <td>Cardiologist</td>
+                            <td>john@example.com</td>
+                            <!-- Add more rows for each doctor -->
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -12,7 +12,7 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .decorators import admin_required
+from .decorators import admin_required, hospital_required
 
 import requests
 
@@ -22,6 +22,7 @@ def login_user(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(request, email=email, password=password)
+        print(f"User: {user.__dict__}")
         if user is not None:
             login(request, user)
             return redirect('index')
@@ -41,6 +42,13 @@ def logout_user(request):
     logout(request)
     return redirect('login')  # Redirect to the login page after logout
 
+# Hospital views
+@login_required
+@hospital_required
+def hospital_dashboard(request):
+    return render(request, 'hospitals/index.html')
+
+
 # Create your views here.
 @login_required
 @admin_required
@@ -56,10 +64,10 @@ def create_hospital(request):
         user_form = CustomUserCreationForm(request.POST)
 
         if hospital_form.is_valid() and user_form.is_valid():
-            user_form.cleaned_data['user_type'] = 'hospital'
-
             # Save user data
-            user = user_form.save()
+            user = user_form.save(commit=False)
+            user.user_type = 'hospital'
+            user.save()
              # Assuming user_type is a field in your CustomUser model
 
             # Associate the user with the hospital
