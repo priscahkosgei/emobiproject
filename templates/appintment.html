@@ -1,6 +1,0 @@
-<!-- appointment_form.html -->
-<form method="post" action="{% url 'appointment_form' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Appointment</button>
-</form>
