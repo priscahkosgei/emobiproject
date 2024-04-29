@@ -89,6 +89,8 @@ class Doctor(models.Model):
     Defines Doctor model
     """
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, null=True, default=None)
     full_name = models.CharField(max_length=100)
     DEPARTMENT_CHOICES = [
         ('cardiology', 'Cardiology'),
@@ -104,6 +106,8 @@ class Patient(models.Model):
         ('M', 'Male'),
         ('F', 'Female')
     ]
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, null=True, default=None)
     full_name = models.CharField(max_length=200)
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES)

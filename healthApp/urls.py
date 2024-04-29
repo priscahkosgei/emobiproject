@@ -15,8 +15,11 @@ urlpatterns = [
     path('logout/', views.logout_user, name='logout'),
 
     path('hospitals/new', views.create_hospital, name='create_hospital'),
+
     path('hospital/dashboard/', views.hospital_dashboard, name='hospital_dashboard'),
     path('hospital/doctors/new/', views.add_doctor, name='add_doctor'),
+    path('hospital/patients/', views.hospital_get_patients, name='get_patients'),
+    path('hospital/patients/new/', views.hospital_register_patient, name='add_patient'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

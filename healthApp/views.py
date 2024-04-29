@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from requests.auth import HTTPBasicAuth
 from django.http import Http404
 
-from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel, Hospital, Doctor
-from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorForm, PatientsModelForm, AppointmentForm, HospitalForm, CustomUserCreationForm, LoginForm
+from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel, Hospital, Doctor, Patient
+from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorForm, PatientsModelForm, AppointmentForm, HospitalForm,CustomUserCreationForm, LoginForm, PatientForm
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
@@ -45,14 +45,53 @@ def logout_user(request):
 @login_required
 @hospital_required
 def hospital_dashboard(request):
-    return render(request, 'hospitals/index.html')
+    hospital = Hospital.objects.get(user__id=request.user.id)
+    doctors_count = Doctor.objects.filter(hospital__id=hospital.id).count()
+    patients_count = Patient.objects.all().count()
+    return render(request, 'hospitals/index.html', {'hospital': hospital, 'stats': {'doctors': doctors_count, 'patients': patients_count}})
+
+
+@login_required
+@hospital_required
+def hospital_get_patients(request):
+    if request.method == 'GET':
+        hospital = Hospital.objects.get(user__id=request.user.id)
+        patients = Patient.objects.all()
+        return render(request, 'hospitals/patients.html', {'hospital': hospital,'patients': patients})
+
+
+# Register Patient
+@login_required
+@hospital_required
+def hospital_register_patient(request):
+    hospital = Hospital.objects.get(user__id=request.user.id)
+    if request.method == 'POST':
+        patient_form = PatientForm(request.POST, request.FILES)
+        user_form = CustomUserCreationForm(request.POST)
+
+        if patient_form.is_valid() and user_form.is_valid():
+            # Save user data
+            user = user_form.save(commit=False)
+            user.user_type = 'patient'
+            user.save()
+
+            patient = patient_form.save(commit=False)
+            patient.user = user
+            patient.save()
+            return redirect('add_patient')
+        else:
+            print(patient_form.errors)
+        return redirect('add_patient')
+    elif request.method == 'GET':
+        patient_form = PatientForm()
+        user_form = CustomUserCreationForm()
+        return render(request, 'hospitals/add_patient.html', {'hospital': hospital, 'patient_form': patient_form, 'user_form': user_form})
 
 @login_required
 @hospital_required
 def add_doctor(request):
     if request.method == "POST":
         doctors_form = DoctorForm(request.POST)
-        
         if doctors_form.is_valid():
             doctor = doctors_form.save(commit=False)
             hospital = Hospital.objects.get(user__id=request.user.id)
@@ -60,9 +99,10 @@ def add_doctor(request):
             doctor.save()
         return redirect('add_doctor')
     else:
+        hospital = Hospital.objects.get(user__id=request.user.id)
         doctors = Doctor.objects.filter(hospital__user__id=request.user.id)
         form = DoctorForm()
-        return render(request, 'hospitals/add_doctor.html', {'form': form, 'doctors': doctors})
+        return render(request, 'hospitals/add_doctor.html', {'form': form, 'doctors': doctors, 'hospital': hospital})
 
 
 # Create your views here.

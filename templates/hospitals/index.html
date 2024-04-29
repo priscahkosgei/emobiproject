@@ -3,36 +3,36 @@
 <div class="container mt-4">
     <div class="row">
         <!-- Hospital Information Widget -->
-        <div class="col-lg-3 mb-4">
+        <div class="col-lg-4 mb-4">
             <div class="card">
                 <div class="card-header">
                     Hospital Information
                 </div>
                 <div class="card-body">
                     <!-- Display hospital information here -->
-                    <p>Hospital Name: XYZ Hospital</p>
-                    <p>Address: 123 Main Street</p>
-                    <p>City: Anytown</p>
+                    <p>Hospital Name: <b>{{hospital.full_name}}</b></p>
+                    <p>County: <b>{{hospital.county}}</b></p>
+                    <p>Constituency/City: <b>{{hospital.constituency}}/{{hospital.town}}</b></p>
                     <!-- Add more hospital info as needed -->
                 </div>
             </div>
         </div>
 
         <!-- Number of Doctors Widget -->
-        <div class="col-lg-3 mb-4">
+        <div class="col-lg-2 mb-4">
             <div class="card">
                 <div class="card-header">
                     Number of Doctors
                 </div>
                 <div class="card-body">
                     <!-- Display number of doctors here -->
-                    <h1>25</h1>
+                    <h1>{{stats.doctors}}</h1>
                 </div>
             </div>
         </div>
 
         <!-- Number of Other Staff Widget -->
-        <div class="col-lg-3 mb-4">
+        <div class="col-lg-2 mb-4">
             <div class="card">
                 <div class="card-header">
                     Number of Other Staff
@@ -45,14 +45,15 @@
         </div>
 
         <!-- Number of Patients Widget -->
-        <div class="col-lg-3 mb-4">
+        <div class="col-lg-4 mb-4">
             <div class="card">
                 <div class="card-header">
                     Number of Patients
+                    <p class="py-1 text-success">Patients across the Centralised Hospital System</p>
                 </div>
                 <div class="card-body">
                     <!-- Display number of patients here -->
-                    <h1>100</h1>
+                    <h1>{{stats.patients}}</h1>
                 </div>
             </div>
         </div>

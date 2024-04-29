@@ -1,0 +1,62 @@
+{% extends 'hospitals/DashLayout.html' %} {% block body %}
+<section class="container my-5">
+  <div class="row d-flex justify-content-between">
+    <h2 class="px-4">Patients</h2>
+    <div class="col-lg-6 d-flex justify-content-end">
+      <form
+        action="#"
+        method="GET"
+        class="d-flex flex-row align-items-center justify-content-center"
+      >
+        <input
+          type="text"
+          name="q"
+          placeholder="Search..."
+          class="form-control my-auto mr-2"
+        />
+        <button type="submit" class="btn btn-primary mr-2">Search</button>
+      </form>
+      <a href="{% url 'add_patient' %}" class="my-auto btn btn-success">Register Patient</a>
+    </div>
+  </div>
+  <div class="row bg-light py-4">
+    <div class="px-4 hospital-list-table">
+      <table class="table border h-max">
+        <thead class="thead-dark">
+          <tr>
+            <th class="border p-2">ID</th>
+            <th class="border p-2">Full Name</th>
+            <th class="border p-2">Email</th>
+            <th class="border p-2">Gender</th>
+            <th class="border p-2">Date of Birth</th>
+            <th class="border p-2">Contact</th>
+            <th class="border p-2">County</th>
+            <th class="border p-2">Constituency</th>
+            <th class="border p-2">Town</th>
+            <th class="border p-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for patient in patients %}
+          <tr class="h-max">
+            <td class="border p-2">1</td>
+            <td class="border p-2">{{patient.full_name}}</td>
+            <td class="border p-2">{{patient.user.email}}</td>
+            <td class="border p-2">{{patient.gender}}</td>
+            <td class="border p-2">{{patient.date_of_birth}}</td>
+            <td class="border p-2">{{patient.contact}}</td>
+            <td class="border p-2">{{patient.county}}</td>
+            <td class="border p-2">{{patient.constituency}}</td>
+            <td class="border p-2">{{patient.town}}</td>
+            <td class="d-flex gap-5">
+              <a href="#" class="btn bg-info px-0 text-white">View</a>
+              <button class="btn bg-danger text-white mx-2">Unregister</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}
