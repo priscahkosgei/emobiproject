@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from requests.auth import HTTPBasicAuth
 from django.http import Http404
 
-from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel, Hospital, Doctor, Patient
+from healthApp.models import Member, Product, ImageModel, MedicalReport, DoctorsModel, PatientsModel, Hospital, Doctor, Patient
 from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorForm, PatientsModelForm, AppointmentForm, HospitalForm,CustomUserCreationForm, LoginForm, PatientForm
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
@@ -21,7 +21,6 @@ def login_user(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(request, email=email, password=password)
-        print(f"User: {user.__dict__}")
         if user is not None:
             login(request, user)
             return redirect('index')
@@ -140,15 +139,14 @@ def create_hospital(request):
     return render(request, 'create_hospital.html', {'hospital_form': hospital_form, 'user_form': user_form, 'hospitals_list': hospitals})
 
 
+# Patient Views
+@login_required
+def patient_detail(request):
+    patient = Patient.objects.get(user__id=request.user.id)
+    medical_reports = MedicalReport.objects.filter(patient=patient)
+    return render(request, 'hospitals/patient_dashboard.html', {'patient': patient, 'medical_reports': medical_reports})
+    
 
-def register(request):
-    if request.method == 'POST':
-        member = Member(fullname=request.POST['fullname'], username=request.POST['username'],
-                        email=request.POST['email'], password=request.POST['password'])
-        member.save()
-        return redirect('/')
-    else:
-        return render(request, 'register.html')
 
 
 def medical_report(request):

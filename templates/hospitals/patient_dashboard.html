@@ -1,0 +1,36 @@
+{% extends 'hospitals/UserDashLayout.html' %} {% block body %}
+<div class="container">
+  <div class="row my-5">
+    <div class="col-12 card border">
+      <div class="card-header">User Information</div>
+      <div class="card-body">
+        <p>Name: <b>{{ patient.full_name }}</b></p>
+        <p>Email: <b>{{ patient.user.email }}</b></p>
+        <p>Gender: <b>{{ patient.gender }}</b></p>
+        <p>Date of Birth: <b>{{ patient.date_of_birth }}</b></p>
+        <p>Contact: <b>{{ patient.contact }}</b></p>
+        <p>
+          County/Consituency/Town:
+          <b>{{ patient.county }}/{{patient.constituency}}/{{patient.town}}</b>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <h2>Medical Reports</h2>
+    {% if medical_reports %} {% for report in medical_reports %}
+    <div class="card">
+      <div class="card-header">
+        <h3>{{ report.title }}</h3>
+        <p>Date: {{ report.date }}</p>
+      </div>
+      <div class="card-body">
+        <p>{{ report.description }}</p>
+        <!-- Add other fields as needed -->
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <p>No medical reports found.</p>
+  </div>
+</div>
+{% endif %} {% endblock %}

@@ -10,7 +10,6 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('accouts/register', views.register, name='register'),
     path('accounts/login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
 
@@ -20,6 +19,8 @@ urlpatterns = [
     path('hospital/doctors/new/', views.add_doctor, name='add_doctor'),
     path('hospital/patients/', views.hospital_get_patients, name='get_patients'),
     path('hospital/patients/new/', views.hospital_register_patient, name='add_patient'),
+
+    path('user/', views.patient_detail, name='user_dashboard')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
