@@ -90,9 +90,10 @@ def hospital_dashboard(request):
     else:
         hospital_id = Hospital.objects.get(user__id=request.user.id).id
     hospital = Hospital.objects.get(id=hospital_id)
-    doctors_count = Doctor.objects.filter(hospital__id=hospital.id).count()
+    doctors = Doctor.objects.filter(hospital__id=hospital.id)
+    doctors_count = doctors.count()
     patients_count = Patient.objects.all().count()
-    return render(request, 'hospitals/index.html', {'hospital': hospital, 'stats': {'doctors': doctors_count, 'patients': patients_count}})
+    return render(request, 'hospitals/index.html', {'hospital': hospital, 'stats': {'doctors': doctors_count, 'patients': patients_count}, 'doctors': doctors})
 
 
 @login_required
