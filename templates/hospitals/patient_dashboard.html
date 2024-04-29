@@ -1,7 +1,7 @@
 {% extends 'hospitals/UserDashLayout.html' %} {% block body %}
 <div class="container my-5">
-  <div class="row my-5">
-    <div class="col-12 card border">
+  <div class="row d-flex flex-column my-5">
+    <div class="card border">
       <div class="card-header">User Information</div>
       <div class="card-body">
         <p>Name: <b>{{ patient.full_name }}</b></p>
@@ -18,22 +18,36 @@
   </div>
   <div class="row">
     <h2>Medical Reports</h2>
-    {% if reports %} {% for report in reports %}
-    <div class="card">
+  </div>
+  <div class="row d-flex flex-column">
+     {% if reports %} {% for report in reports %}
+    <div class="card mb-3">
       <div class="card-header">
         <h3>{{ report.title }}</h3>
-        <p>Date: {{ report.date }}</p>
+        <p>Date: {{ report.created_at }}</p>
       </div>
       <div class="card-body">
-        <p>{{ report.description }}</p>
+        <p>{{ report.content }}</p>
+        <p>{{ report.drugs }}</p>
         <div class="d-flex justify-content-end">
-            <img src={{report.doctor.image}} alt="Doctor" style="width: 14px; height: 14px; border-radius: 50%;" class="border">
-            <h6>{{report.doctor.full_name}}</h6>
+          <img
+            src="{{report.doctor.image}}"
+            alt="Doctor"
+            style="width: 40px; height: 40px; border-radius: 50%"
+            class="border"
+          />
+          <span>
+            <h6 class="my-auto ml-3">{{report.doctor.full_name}}</h6>
+            <h6 class="my-auto py-1 ml-3">
+              <strong>{{report.doctor.hospital.full_name}}</strong>
+            </h6>
+          </span>
         </div>
       </div>
     </div>
     {% endfor %} {% else %}
     <p>No medical reports found.</p>
+    {% endif %} 
   </div>
 </div>
-{% endif %} {% endblock %}
+{% endblock %}

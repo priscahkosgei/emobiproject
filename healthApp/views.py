@@ -141,7 +141,13 @@ def hospital_get_patients(request):
 @login_required
 @hospital_required
 def hospital_register_patient(request):
-    hospital = Hospital.objects.get(user__id=request.user.id)
+    hospital_id = ""
+    hospital = None
+    if request.user.user_type == 'doctor':
+        hospital_id = Doctor.objects.get(user__id=request.user.id).hospital.id
+    else:
+        hospital_id = Hospital.objects.get(user__id=request.user.id).id
+    hospital = Hospital.objects.get(id=hospital_id)
     if request.method == 'POST':
         patient_form = PatientForm(request.POST, request.FILES)
         user_form = CustomUserCreationForm(request.POST)
@@ -206,6 +212,6 @@ def doctor_create_patient_report(request, patient_id):
 @login_required
 def patient_detail(request):
     patient = Patient.objects.get(user__id=request.user.id)
-    medical_reports = MedicalReport.objects.filter(patient=patient)
-    return render(request, 'hospitals/patient_dashboard.html', {'patient': patient, 'medical_reports': medical_reports})
+    medical_reports = MedicalReport.objects.filter(patient__id=patient.id)
+    return render(request, 'hospitals/patient_dashboard.html', {'patient': patient, 'reports': medical_reports})
 
