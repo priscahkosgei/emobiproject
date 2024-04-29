@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from requests.auth import HTTPBasicAuth
 from django.http import Http404
 
-from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel, Hospital
+from healthApp.models import Member, Product, ImageModel, MedicalReportModel, DoctorsModel, PatientsModel, Hospital, Doctor
 from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorForm, PatientsModelForm, AppointmentForm, HospitalForm, CustomUserCreationForm, LoginForm
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
@@ -51,10 +51,18 @@ def hospital_dashboard(request):
 @hospital_required
 def add_doctor(request):
     if request.method == "POST":
+        doctors_form = DoctorForm(request.POST)
+        
+        if doctors_form.is_valid():
+            doctor = doctors_form.save(commit=False)
+            hospital = Hospital.objects.get(user__id=request.user.id)
+            doctor.hospital = hospital
+            doctor.save()
         return redirect('add_doctor')
     else:
+        doctors = Doctor.objects.filter(hospital__user__id=request.user.id)
         form = DoctorForm()
-        return render(request, 'hospitals/add_doctor.html', {'form': form})
+        return render(request, 'hospitals/add_doctor.html', {'form': form, 'doctors': doctors})
 
 
 # Create your views here.
@@ -65,10 +73,8 @@ def create_hospital(request):
     Register a new hospital
     """
     current_user = request.user
-    print(current_user)
     if request.method == 'POST':
         hospital_form = HospitalForm(request.POST)
-        print(request.POST)
         user_form = CustomUserCreationForm(request.POST)
 
         if hospital_form.is_valid() and user_form.is_valid():
