@@ -1,19 +1,9 @@
-import base64
-import json
-
-from django.shortcuts import render, redirect, get_object_or_404, reverse
-from requests.auth import HTTPBasicAuth
-from django.http import Http404
-
-from healthApp.models import Member, Product, ImageModel, MedicalReport, DoctorsModel, PatientsModel, Hospital, Doctor, Patient, CustomUser
-from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorForm, PatientsModelForm, AppointmentForm, HospitalForm, CustomUserCreationForm, LoginForm, PatientForm
-from django.http import HttpResponse
-from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect, reverse
+from healthApp.models import Member, Product, ImageModel, MedicalReport, Hospital, Doctor, Patient
+from healthApp.forms import MedicalReportForm, DoctorForm, HospitalForm, CustomUserCreationForm, LoginForm, PatientForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .decorators import admin_required, hospital_required
-
-import requests
 
 
 def login_user(request):
@@ -78,6 +68,32 @@ def create_hospital(request):
 
     hospitals = Hospital.objects.all()
     return render(request, 'create_hospital.html', {'hospital_form': hospital_form, 'user_form': user_form, 'hospitals_list': hospitals})
+
+# Hospital delete 
+@login_required
+@admin_required
+def delete_hospital(request, hospital_id):
+    hospital = Hospital.objects.get(id=hospital_id)
+    hospital.delete()
+    return redirect('create_hospital')
+
+
+@login_required
+@hospital_required
+def delete_doctor(request, doctor_id):
+    if request.user.user_type == 'doctor':
+        return redirect('add_doctor')
+    doctor = Doctor.objects.get(id=doctor_id)
+    doctor.delete()
+    return redirect('add_doctor')
+
+# Hospital delete Patient
+@login_required
+@hospital_required
+def delete_patient(request, patient_id):
+    patient = Patient.objects.get(id=patient_id)
+    patient.delete()
+    return redirect('get_patients')
 
 # Hospital views
 @login_required

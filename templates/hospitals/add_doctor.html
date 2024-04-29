@@ -41,8 +41,7 @@
             <td class="border p-2">{{doctor.full_name}}</td>
             <td class="border p-2">{{doctor.department}}</td>
             <td class="d-flex gap-5">
-              <a href="#" class="btn bg-info text-white mx-1">View</a>
-              <a href="#" class="btn bg-danger text-white mx-1">Delete</a>
+              <a href="{% url 'delete_doctor' doctor_id=doctor.id %}" class="btn bg-danger text-white mx-1">Delete</a>
             </td>
           </tr>
           {% endfor %}

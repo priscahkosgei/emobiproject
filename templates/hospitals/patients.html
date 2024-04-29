@@ -50,7 +50,7 @@
             <td class="border p-2">{{patient.town}}</td>
             <td class="d-flex gap-5">
               <a href="{% url 'view_patient' patient_id=patient.id %}" class="btn bg-info  text-white">View</a>
-              <button class="btn bg-danger text-white mx-2">Unregister</button>
+              <a href="{% url 'delete_patient' patient_id=patient.id %}" class="btn bg-danger text-white mx-2">Unregister</a>
             </td>
           </tr>
           {% endfor %}

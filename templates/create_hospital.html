@@ -37,6 +37,7 @@
         <td class="border p-2">{{ hospital.county }}</td>
         <td class="border p-2">{{ hospital.constituency }}</td>
         <td class="border p-2">{{ hospital.town }}</td>
+        <td><a href="{% url 'delete_hospital' hospital_id=hospital.id %}" class="btn btn-danger">Delete</a></td>
       </tr>
       {% endfor %}
     </tbody>
