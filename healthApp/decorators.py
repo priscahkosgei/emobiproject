@@ -22,6 +22,7 @@ def admin_required(view_func):
     return _wrapped_view
 
 
+
 def hospital_required(view_func):
     """
     Decorator to ensure that the user is an admin.
@@ -30,7 +31,7 @@ def hospital_required(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         # Check if user is authenticated and is an admin
-        if request.user.is_authenticated and request.user.user_type == 'hospital':
+        if request.user.is_authenticated and (request.user.user_type == 'hospital' or request.user.user_type == 'doctor'):
             # User is an admin, allow access to the view
             return view_func(request, *args, **kwargs)
         else:
@@ -39,3 +40,4 @@ def hospital_required(view_func):
             return redirect('login')
 
     return _wrapped_view
+

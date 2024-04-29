@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from requests.auth import HTTPBasicAuth
 from django.http import Http404
 
-from healthApp.models import Member, Product, ImageModel, MedicalReport, DoctorsModel, PatientsModel, Hospital, Doctor, Patient
+from healthApp.models import Member, Product, ImageModel, MedicalReport, DoctorsModel, PatientsModel, Hospital, Doctor, Patient, CustomUser
 from healthApp.forms import ProductForm, ImageUploadForm, MedicalReportForm, DoctorForm, PatientsModelForm, AppointmentForm, HospitalForm, CustomUserCreationForm, LoginForm, PatientForm
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
@@ -25,7 +25,7 @@ def login_user(request):
             login(request, user)
             if user.user_type == 'admin':
                 return redirect('create_hospital')
-            elif user.user_type == 'hospital':
+            elif user.user_type == 'hospital' or user.user_type == 'doctor':
                 return redirect('hospital_dashboard')
             elif user.user_type == 'patient':
                 return redirect('user_dashboard')
@@ -46,13 +46,50 @@ def logout_user(request):
     logout(request)
     return redirect('login')  # Redirect to the login page after logout
 
+# Admin Views
+# Register Hospital
+@login_required
+@admin_required
+def create_hospital(request):
+    """
+    Register a new hospital
+    """
+    if request.method == 'POST':
+        hospital_form = HospitalForm(request.POST)
+        user_form = CustomUserCreationForm(request.POST)
+
+        if hospital_form.is_valid() and user_form.is_valid():
+            # Save user data
+            user = user_form.save(commit=False)
+            user.user_type = 'hospital'
+            user.save()
+            # Assuming user_type is a field in your CustomUser model
+
+            # Associate the user with the hospital
+            hospital = hospital_form.save(commit=False)
+            hospital.user = user
+            hospital.save()
+
+            return redirect('create_hospital')
+        print(user_form.errors)
+    else:
+        hospital_form = HospitalForm()
+        user_form = CustomUserCreationForm()
+
+    hospitals = Hospital.objects.all()
+    return render(request, 'create_hospital.html', {'hospital_form': hospital_form, 'user_form': user_form, 'hospitals_list': hospitals})
+
 # Hospital views
-
-
 @login_required
 @hospital_required
 def hospital_dashboard(request):
-    hospital = Hospital.objects.get(user__id=request.user.id)
+    hospital_id = ""
+    hospital = None
+    if request.user.user_type == 'doctor':
+        hospital_id = Doctor.objects.get(user__id=request.user.id).hospital.id
+    else:
+        hospital_id = Hospital.objects.get(user__id=request.user.id).id
+    hospital = Hospital.objects.get(id=hospital_id)
     doctors_count = Doctor.objects.filter(hospital__id=hospital.id).count()
     patients_count = Patient.objects.all().count()
     return render(request, 'hospitals/index.html', {'hospital': hospital, 'stats': {'doctors': doctors_count, 'patients': patients_count}})
@@ -60,12 +97,45 @@ def hospital_dashboard(request):
 
 @login_required
 @hospital_required
-def hospital_get_patients(request):
-    if request.method == 'GET':
+def add_doctor(request):
+    if request.user.user_type == 'doctor':
+        return redirect('hospital_dashboard')
+    if request.method == "POST":
+        doctors_form = DoctorForm(request.POST)
+        user_form = CustomUserCreationForm(request.POST)
+
+        if doctors_form.is_valid() and user_form.is_valid():
+            # Save user data
+            user = user_form.save(commit=False)
+            user.user_type = 'doctor'
+            user.save()
+            doctor = doctors_form.save(commit=False)
+            hospital = Hospital.objects.get(user__id=request.user.id)
+            doctor.hospital = hospital
+            doctor.user = user
+            doctor.save()
+        return redirect('add_doctor')
+    else:
         hospital = Hospital.objects.get(user__id=request.user.id)
+        doctors = Doctor.objects.filter(hospital__user__id=request.user.id)
+        doctors_form = DoctorForm()
+        user_form = CustomUserCreationForm()
+        return render(request, 'hospitals/add_doctor.html', {'doctors_form': doctors_form, 'users_form': user_form, 'doctors': doctors, 'hospital': hospital})
+
+@login_required
+@hospital_required
+def hospital_get_patients(request):
+    hospital_id = ""
+    hospital = None
+    if request.user.user_type == 'doctor':
+        hospital_id = Doctor.objects.get(user__id=request.user.id).hospital.id
+    else:
+        hospital_id = Hospital.objects.get(user__id=request.user.id).id
+    hospital = Hospital.objects.get(id=hospital_id)
+    if request.method == 'GET':
+        hospital = Hospital.objects.get(id=hospital_id)
         patients = Patient.objects.all()
         return render(request, 'hospitals/patients.html', {'hospital': hospital, 'patients': patients})
-
 
 # Register Patient
 @login_required
@@ -94,59 +164,20 @@ def hospital_register_patient(request):
         user_form = CustomUserCreationForm()
         return render(request, 'hospitals/add_patient.html', {'hospital': hospital, 'patient_form': patient_form, 'user_form': user_form})
 
-
+# Doctor view patients medical history
 @login_required
 @hospital_required
-def add_doctor(request):
-    if request.method == "POST":
-        doctors_form = DoctorForm(request.POST)
-        if doctors_form.is_valid():
-            doctor = doctors_form.save(commit=False)
-            hospital = Hospital.objects.get(user__id=request.user.id)
-            doctor.hospital = hospital
-            doctor.save()
-        return redirect('add_doctor')
-    else:
-        hospital = Hospital.objects.get(user__id=request.user.id)
-        doctors = Doctor.objects.filter(hospital__user__id=request.user.id)
-        form = DoctorForm()
-        return render(request, 'hospitals/add_doctor.html', {'form': form, 'doctors': doctors, 'hospital': hospital})
-
-
-# Create your views here.
-@login_required
-@admin_required
-def create_hospital(request):
-    """
-    Register a new hospital
-    """
-    current_user = request.user
+def doctor_view_patient(request, patient_id):
+    if request.user.user_type == 'hospital':
+        return redirect('hospital_dashboard')
+    doctor = Doctor.objects.get(user__id=request.user.id)
+    hospital = Hospital.objects.get(id=doctor.hospital_id)
     if request.method == 'POST':
-        hospital_form = HospitalForm(request.POST)
-        user_form = CustomUserCreationForm(request.POST)
-
-        if hospital_form.is_valid() and user_form.is_valid():
-            # Save user data
-            user = user_form.save(commit=False)
-            user.user_type = 'hospital'
-            user.save()
-            # Assuming user_type is a field in your CustomUser model
-
-            # Associate the user with the hospital
-            hospital = hospital_form.save(commit=False)
-            hospital.user = user
-            hospital.save()
-
-            return redirect('create_hospital')
-        print(user_form.errors)
+        return redirect('view_patient')
     else:
-        hospital_form = HospitalForm()
-        user_form = CustomUserCreationForm()
-
-    hospitals = Hospital.objects.all()
-    print(hospitals[1].__dict__)
-    return render(request, 'create_hospital.html', {'hospital_form': hospital_form, 'user_form': user_form, 'hospitals_list': hospitals})
-
+        patient = Patient.objects.get(id=patient_id)
+        reports = MedicalReport.objects.filter(patient__id=patient.id)
+        return render(request, 'hospitals/patient_view.html', {'patient': patient, 'hospital': hospital, 'reports': reports})
 
 # Patient Views
 @login_required

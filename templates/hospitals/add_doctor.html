@@ -10,7 +10,8 @@
         enctype="multipart/form-data"
         style="width: 100%; padding: 10px"
       >
-        {% csrf_token %} {{ form.as_p }}
+        {% csrf_token %} {{ doctors_form.as_p }}
+        {% csrf_token %} {{ users_form.as_p }}
         <input type="submit" value="Submit" />
       </form>
     </div>
