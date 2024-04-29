@@ -1,5 +1,5 @@
 {% extends 'hospitals/UserDashLayout.html' %} {% block body %}
-<div class="container">
+<div class="container my-5">
   <div class="row my-5">
     <div class="col-12 card border">
       <div class="card-header">User Information</div>
@@ -18,7 +18,7 @@
   </div>
   <div class="row">
     <h2>Medical Reports</h2>
-    {% if medical_reports %} {% for report in medical_reports %}
+    {% if reports %} {% for report in reports %}
     <div class="card">
       <div class="card-header">
         <h3>{{ report.title }}</h3>
@@ -26,7 +26,10 @@
       </div>
       <div class="card-body">
         <p>{{ report.description }}</p>
-        <!-- Add other fields as needed -->
+        <div class="d-flex justify-content-end">
+            <img src={{report.doctor.image}} alt="Doctor" style="width: 14px; height: 14px; border-radius: 50%;" class="border">
+            <h6>{{report.doctor.full_name}}</h6>
+        </div>
       </div>
     </div>
     {% endfor %} {% else %}

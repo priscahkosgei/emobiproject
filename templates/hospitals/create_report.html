@@ -1,0 +1,20 @@
+{% extends 'hospitals/DashLayout.html' %} {% block body %}
+<section class="container my-5">
+  <div class="row bg-light py-4">
+    <h2 class="px-4">Write Medical Report</h2>
+    <form
+      class="formd shadow-none my-0 rounded-0"
+      action="{% url 'create_report' patient_id=patient.id %}"
+      method="post"
+      enctype="multipart/form-data"
+      style="width: 100%; padding: 10px"
+    >
+      {% csrf_token %} {{ form.as_p }}
+      <input type="submit" value="Submit" />
+    </form>
+    <div class="col-8 d-flex justify-content-center">
+      <a href="{% url 'view_patient' patient_id=patient.id %}" class="text-center bg-body-secondary">Go Back to Reports</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

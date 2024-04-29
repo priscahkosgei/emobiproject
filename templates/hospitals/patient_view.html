@@ -1,7 +1,7 @@
 {% extends 'hospitals/DashLayout.html' %} {% block body %}
-<div class="container">
-  <div class="row my-5">
-    <div class="col-12 card border">
+<div class="container my-5">
+  <div class="row my-5 d-flex flex-column">
+    <div class="card border">
       <div class="card-header">Patient Information</div>
       <div class="card-body">
         <p>Name: <b>{{ patient.full_name }}</b></p>
@@ -18,23 +18,42 @@
   </div>
   <div class="row">
     <span class="col-12 d-flex justify-content-between align-items-center">
-        <h2>Medical Reports</h2>
-        <a href="#" class="btn btn-success">New Report</a>
+      <h2>Medical Reports</h2>
+      <a
+        href="{% url 'create_report' patient_id=patient.id %}"
+        class="btn btn-success"
+        >New Report</a
+      >
     </span>
-    {% if medical_reports %} {% for report in medical_reports %}
-    <div class="card">
+  </div>
+  <div class="row d-flex flex-column">
+     {% if reports %} {% for report in reports %}
+    <div class="card mb-3">
       <div class="card-header">
         <h3>{{ report.title }}</h3>
-        <p>Date: {{ report.date }}</p>
+        <p>Date: {{ report.created_at }}</p>
       </div>
       <div class="card-body">
-        <p>{{ report.description }}</p>
-        <!-- Add other fields as needed -->
+        <p>{{ report.content }}</p>
+        <p>{{ report.drugs }}</p>
+        <div class="d-flex justify-content-end">
+          <img
+            src="{{report.doctor.image}}"
+            alt="Doctor"
+            style="width: 40px; height: 40px; border-radius: 50%"
+            class="border"
+          />
+          <span>
+            <h6 class="my-auto ml-3">{{report.doctor.full_name}}</h6>
+            <h6 class="my-auto py-1 ml-3">
+              <strong>{{report.doctor.hospital.full_name}}</strong>
+            </h6>
+          </span>
+        </div>
       </div>
     </div>
     {% endfor %} {% else %}
     <p>No medical reports found.</p>
   </div>
 </div>
-{% endif %}
-{% endblock %}
+{% endif %} {% endblock %}
