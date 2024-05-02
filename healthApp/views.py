@@ -29,6 +29,7 @@ def login_user(request):
         return render(request, 'login.html', {'form': form})
 
 def index(request):
+
     return render(request, 'index.html')
 
 def logout_user(request):
