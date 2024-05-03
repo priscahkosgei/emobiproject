@@ -32,8 +32,9 @@ class LoginForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['email', 'password']
-
-
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
 class HospitalForm(forms.ModelForm):
     class Meta:
         model = Hospital
