@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
+    path('', views.index, name='index'),
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('view/dashboard', views.view_dashboard, name='view_dashboard'),

@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'healthApp',
-    # 'healthApp.apps.HealthappConfig',
+    # 'HealthApp.apps.HealthAppConfig',
 ]
 
 AUTH_USER_MODEL = 'healthApp.CustomUser'
