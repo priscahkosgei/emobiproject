@@ -61,7 +61,6 @@ def create_hospital(request):
             hospital.save()
 
             return redirect('create_hospital')
-        print(user_form.errors)
     else:
         hospital_form = HospitalForm()
         user_form = CustomUserCreationForm()
@@ -232,3 +231,17 @@ def patient_detail(request):
     medical_reports = MedicalReport.objects.filter(patient__id=patient.id)
     return render(request, 'hospitals/patient_dashboard.html', {'patient': patient, 'reports': medical_reports})
 
+
+def index(request):
+    return render(request, 'index.html')
+
+@login_required
+def view_dashboard(request):
+    user = request.user
+    if user.user_type == 'admin':
+        return redirect('create_hospital')
+    elif user.user_type == 'hospital' or user.user_type == 'doctor':
+        return redirect('hospital_dashboard')
+    elif user.user_type == 'patient':
+        return redirect('user_dashboard')
+    return redirect('user_dashboard')

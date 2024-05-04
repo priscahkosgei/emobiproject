@@ -8,6 +8,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.index, name='index'),
+    path('view/dashboard', views.view_dashboard, name='view_dashboard'),
     path('accounts/login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
 
