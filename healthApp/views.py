@@ -4,6 +4,7 @@ from healthApp.forms import MedicalReportForm, DoctorForm, HospitalForm, CustomU
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .decorators import admin_required, hospital_required
+from django.db.models import Q
 
 
 def login_user(request):
@@ -151,11 +152,18 @@ def hospital_get_patients(request):
     else:
         hospital_id = Hospital.objects.get(user__id=request.user.id).id
     hospital = Hospital.objects.get(id=hospital_id)
+
     if request.method == 'GET':
         hospital = Hospital.objects.get(id=hospital_id)
-        patients = Patient.objects.all()
+        query = request.GET.get('q')
+        if query:
+            # Filter patients based on search query
+            patients = Patient.objects.filter(
+                Q(full_name__icontains=query) | Q(id__icontains=query)
+            )
+        else:
+            patients = Patient.objects.all()
         return render(request, 'hospitals/patients.html', {'hospital': hospital, 'patients': patients})
-
 # Register Patient
 @login_required
 @hospital_required
