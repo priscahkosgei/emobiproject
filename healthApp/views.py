@@ -62,6 +62,7 @@ def create_hospital(request):
             # Associate the user with the hospital
             hospital = hospital_form.save(commit=False)
             hospital.user = user
+
             hospital.save()
 
             return redirect('create_hospital')
