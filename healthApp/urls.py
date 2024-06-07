@@ -12,6 +12,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('view/dashboard', views.view_dashboard, name='view_dashboard'),
     path('accounts/login/', views.login_user, name='login'),
+    path('verify-2fa/', views.verify_2fa, name='verify_2fa'),
     path('logout/', views.logout_user, name='logout'),
 
     path('hospitals/new', views.create_hospital, name='create_hospital'),

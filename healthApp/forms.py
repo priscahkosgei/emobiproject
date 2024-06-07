@@ -32,9 +32,7 @@ class LoginForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['email', 'password']
-        widgets = {
-            'password': forms.PasswordInput(),
-        }
+        
 class HospitalForm(forms.ModelForm):
     class Meta:
         model = Hospital
@@ -58,3 +56,7 @@ class MedicalReportForm(forms.ModelForm):
     class Meta:
         model = MedicalReport
         fields = ['title', 'content', 'drugs']
+
+
+class TwoFAForm(forms.Form):
+    code = forms.CharField(max_length=6, required=True)
