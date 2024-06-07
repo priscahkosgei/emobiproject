@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from healthApp.models import Member, Product, ImageModel, MedicalReport, Hospital, Doctor, Patient
+from healthApp.models import Member, Product, ImageModel, MedicalReport, Hospital, Doctor, Patient, CustomUser
 from healthApp.forms import MedicalReportForm, DoctorForm, HospitalForm, CustomUserCreationForm, LoginForm, PatientForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -7,20 +7,46 @@ from .decorators import admin_required, hospital_required
 from django.db.models import Q
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.http import HttpResponse
+from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
+import datetime
+
+# Store 2FA code and expiration in session
+TWO_FA_EXPIRY_SECONDS = 300  # 5 minutes
+
+
 def login_user(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(request, email=email, password=password)
+
         if user is not None:
-            login(request, user)
-            if user.user_type == 'admin':
-                return redirect('create_hospital')
-            elif user.user_type == 'hospital' or user.user_type == 'doctor':
-                return redirect('hospital_dashboard')
-            elif user.user_type == 'patient':
-                return redirect('user_dashboard')
-            return redirect('user_dashboard')
+            # Generate a random 2FA code
+            code = get_random_string(6, allowed_chars='0123456789')
+            # Save the code and expiry time in the session
+            request.session['2fa_code'] = code
+            request.session['2fa_expiry'] = (datetime.datetime.now(
+            ) + datetime.timedelta(seconds=TWO_FA_EXPIRY_SECONDS)).strftime('%Y-%m-%d %H:%M:%S')
+            request.session['authenticated_user_id'] = user.id
+
+            # Send the code via email
+            send_mail(
+                'Your 2FA Code',
+                f'Your 2FA code is {code}. It is valid for {TWO_FA_EXPIRY_SECONDS//60} minutes.',
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email]
+            )
+
+            # Redirect to the 2FA verification page
+            return redirect('verify_2fa')
+
         else:
             form = LoginForm()
             return render(request, 'login.html', {'form': form, 'error': "Invalid credentials"})
@@ -28,6 +54,37 @@ def login_user(request):
     elif request.method == 'GET':
         form = LoginForm()
         return render(request, 'login.html', {'form': form})
+
+def verify_2fa(request):
+    if request.method == 'POST':
+        entered_code = request.POST.get('code')
+        stored_code = request.session.get('2fa_code')
+        expiry_str = request.session.get('2fa_expiry')
+        expiry = datetime.datetime.strptime(expiry_str, '%Y-%m-%d %H:%M:%S')
+
+        # Check if code is correct and not expired
+        if stored_code and entered_code == stored_code and datetime.datetime.now() < expiry:
+            user_id = request.session.pop('authenticated_user_id', None)
+            if user_id:
+                user = CustomUser.objects.get(id=user_id)
+                login(request, user)
+                # Clear 2FA session data
+                request.session.pop('2fa_code', None)
+                request.session.pop('2fa_expiry', None)
+                # Redirect based on user type
+                if user.user_type == 'admin':
+                    return redirect('create_hospital')
+                elif user.user_type in ['hospital', 'doctor']:
+                    return redirect('hospital_dashboard')
+                elif user.user_type == 'patient':
+                    return redirect('user_dashboard')
+                return redirect('user_dashboard')
+
+        return render(request, 'verify_2fa.html', {'error': 'Invalid or expired code.'})
+
+    elif request.method == 'GET':
+        return render(request, 'verify_2fa.html')
+
 
 def index(request):
 
